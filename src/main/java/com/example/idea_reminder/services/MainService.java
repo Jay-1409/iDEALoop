@@ -148,6 +148,7 @@ public class MainService {
                     ideasToSend.add(y);
                 }
             }
+            if(ideasToSend.isEmpty())continue;
             sendReminderMail(x.getUserEmail(), ideasToSend);
         }
     }
