@@ -20,7 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-
+import com.cloudinary.*;
+import com.cloudinary.utils.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class MainService {
@@ -28,6 +30,8 @@ public class MainService {
     MainRepository mainRepository;
     @Autowired
     JavaMailSender mailSender;
+    @Autowired
+    private Cloudinary cloudinary;
 
     public boolean checkIfUserExists(String email){
         Optional<User> reqUser = mainRepository.findById(email);
@@ -190,5 +194,23 @@ public class MainService {
             return activeUser.getIdeas();
         }
         return null;
+    }
+    // IMAGE HANDLING
+    public String uploadImage(MultipartFile image) {
+        try {
+            Map uploadResult = cloudinary.uploader().upload(
+                    image.getBytes(),
+                    ObjectUtils.asMap(
+                            "resource_type", "auto",
+                            "folder", "iDEALoop"
+                    )
+            );
+            return uploadResult.get("secure_url").toString();
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+    public String HandleImageUploadReq(List<MultipartFile> images){
+        // THIS FUNCTION WILL GENERATE THE CLOUDINARY LINK FOR THE UPLOADED IMAGE AND THEN STORE IT IN THE LIST<> inside the idea entity
     }
 }
