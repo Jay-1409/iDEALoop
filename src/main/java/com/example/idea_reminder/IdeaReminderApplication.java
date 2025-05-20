@@ -13,7 +13,5 @@ public class IdeaReminderApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(IdeaReminderApplication.class, args);
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
-		SpringApplication.run(IdeaReminderApplication.class, args);
 	}
-
 }
