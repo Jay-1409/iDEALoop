@@ -76,4 +76,12 @@ public class MainController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+    @GetMapping("/fetch-user-ideas/{userMail}")
+    public ResponseEntity<?> fetchUserIdeas(@PathVariable("userMail") String userMail) {
+        try {
+           return new ResponseEntity<>(mainService.getUserIdeas(userMail), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

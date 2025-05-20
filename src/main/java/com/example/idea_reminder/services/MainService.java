@@ -180,4 +180,14 @@ public class MainService {
             return false;
         }
     }
+
+    // Getting user data
+    public List<Idea> getUserIdeas(String Email) {
+        Optional<User> reqUser = mainRepository.findById(Email);
+        if (reqUser.isPresent()) {
+            User activeUser = reqUser.get();
+            return activeUser.getIdeas();
+        }
+        return null;
+    }
 }
