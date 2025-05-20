@@ -6,11 +6,14 @@ import com.example.idea_reminder.repository.MainRepository;
 
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.AccessType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
+import org.springframework.stereotype.Service;
+import org.springframework.mail.javamail.JavaMailSender;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +22,13 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-@Component
+@Service
 public class MainService {
+    @Autowired
     MainRepository mainRepository;
+    @Autowired
     JavaMailSender mailSender;
+
     public boolean checkIfUserExists(String email){
         Optional<User> reqUser = mainRepository.findById(email);
         return reqUser.isPresent();
@@ -78,9 +84,10 @@ public class MainService {
     }
     public boolean addUserIdea(String email, Idea newIdea) {
         Optional<User> reqUser = mainRepository.findById(email);
-        if(reqUser.isPresent()){
+        if(reqUser.isPresent()) {
             User activeUser = reqUser.get();
-            newIdea.setIdeaId(new ObjectId());
+            ObjectId id = new ObjectId();
+            newIdea.setIdeaId(id.toString());
             activeUser.getIdeas().add(newIdea);
             mainRepository.save(activeUser);
             return true;
@@ -88,7 +95,7 @@ public class MainService {
         return false;
     }
     public boolean updateUserIdeas(String email, @NotNull Idea updatedIdea) {
-        ObjectId ideaId = updatedIdea.getIdeaId();
+        String ideaId = updatedIdea.getIdeaId();
         Optional<User> reqUser = mainRepository.findById(email);
         if (reqUser.isPresent()) {
             User activeUser = reqUser.get();
@@ -112,7 +119,7 @@ public class MainService {
         }
         return false;
     }
-    public boolean deleteIdea(String userMail, ObjectId ideaId) {
+    public boolean deleteIdea(String userMail, String ideaId) {
         Optional<User> reqUser = mainRepository.findById(userMail);
         if(reqUser.isPresent()) {
             User activeUser = reqUser.get();

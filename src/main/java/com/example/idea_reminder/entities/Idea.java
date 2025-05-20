@@ -7,17 +7,17 @@ import java.time.LocalDate;
 import java.util.Date;
 
 public class Idea {
-    ObjectId ideaId;
+    String ideaId;
     String ideaTitle;
     String ideaText;
     boolean remindMe;
     LocalDate nextRemindDate;
     int gap;
-    public ObjectId getIdeaId() {
+    public String getIdeaId() {
         return ideaId;
     }
 
-    public void setIdeaId(ObjectId ideaId) {
+    public void setIdeaId(String ideaId) {
         this.ideaId = ideaId;
     }
 
