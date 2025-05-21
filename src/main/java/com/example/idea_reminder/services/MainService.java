@@ -20,7 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-
+import com.cloudinary.*;
+import com.cloudinary.utils.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class MainService {
@@ -28,6 +30,8 @@ public class MainService {
     MainRepository mainRepository;
     @Autowired
     JavaMailSender mailSender;
+    @Autowired
+    private Cloudinary cloudinary;
 
     public boolean checkIfUserExists(String email){
         Optional<User> reqUser = mainRepository.findById(email);
@@ -190,5 +194,38 @@ public class MainService {
             return activeUser.getIdeas();
         }
         return null;
+    }
+    // IMAGE HANDLING
+    public String uploadImage(MultipartFile image) {
+        try {
+            Map uploadResult = cloudinary.uploader().upload(
+                    image.getBytes(),
+                    ObjectUtils.asMap(
+                            "resource_type", "auto",
+                            "folder", "iDEALoop"
+                    )
+            );
+            return uploadResult.get("secure_url").toString();
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    public boolean HandleImageUploadReq(List<MultipartFile> images, String userMail, String ideaId){
+        // THIS FUNCTION WILL GENERATE THE CLOUDINARY LINK FOR THE UPLOADED IMAGE AND THEN STORE IT IN THE LIST<> inside the idea entity
+        Optional<User> reqUser = mainRepository.findById(userMail);
+        if(reqUser.isPresent()){
+            User activeUser = reqUser.get();
+            for(Idea idea:activeUser.getIdeas()){
+                if(idea.getIdeaId().equals(ideaId)) {
+                    List<String> imageUrls = new ArrayList<>();
+                    for(MultipartFile image : images){
+                        imageUrls.add(uploadImage(image));
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
