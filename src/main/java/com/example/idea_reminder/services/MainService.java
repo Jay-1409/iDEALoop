@@ -101,7 +101,7 @@ public class MainService {
         }
         return false;
     }
-    public boolean updateUserIdeas(String email, @NotNull Idea updatedIdea) {
+    public boolean updateUserIdeas(String email, @NotNull Idea updatedIdea, List<MultipartFile> images) {
         String ideaId = updatedIdea.getIdeaId();
         Optional<User> reqUser = mainRepository.findById(email);
         if (reqUser.isPresent()) {
@@ -115,6 +115,13 @@ public class MainService {
                     idea.setRemindMe(updatedIdea.isRemindMe());
                     idea.setNextRemindDate(updatedIdea.getNextRemindDate());
                     idea.setGap(updatedIdea.getGap());
+                    idea.setImageUrls(updatedIdea.getImageUrls());
+                    if(!images.isEmpty()){
+                        List<String> newUrls = (HandleImageUploadReq(images));
+                        for(String urls: newUrls) {
+                            idea.getImageUrls().add(urls);
+                        }
+                    }
                     updated = true;
                     break;
                 }

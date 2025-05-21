@@ -9,6 +9,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.messaging.Task;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,8 +56,11 @@ public class MainController {
         }
     }
     //USER TASKS ADDITION + UPDATE + DELETIONS
-    @PostMapping("/add-idea")
-    public ResponseEntity<?> addIdea(@RequestParam String UserMail, @RequestBody Idea newIdea, @RequestParam List<MultipartFile> images) {
+    @PostMapping(value = "/add-idea", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addIdea(
+            @RequestParam String UserMail,
+            @RequestPart("idea") Idea newIdea,
+            @RequestPart("images") List<MultipartFile> images) {
         try {
             mainService.addUserIdea(UserMail, newIdea, images);
             return new ResponseEntity<>(newIdea, HttpStatus.OK);
@@ -64,10 +68,13 @@ public class MainController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-    @PutMapping("/update-idea/{UserMail}")
-    public ResponseEntity<?> updateIdea(@PathVariable("UserMail") String UserMail, @RequestBody Idea updatedIdeas) {
+    @PutMapping(value = "/update-idea/{UserMail}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateIdea(
+            @PathVariable("UserMail") String UserMail,
+            @RequestPart("idea") Idea updatedIdeas,
+            @RequestPart("images") List<MultipartFile> images) {
         try {
-            return new ResponseEntity<>(mainService.updateUserIdeas(UserMail,updatedIdeas), HttpStatus.OK);
+            return new ResponseEntity<>(mainService.updateUserIdeas(UserMail, updatedIdeas, images), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
