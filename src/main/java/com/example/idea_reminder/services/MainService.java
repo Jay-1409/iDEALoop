@@ -86,12 +86,15 @@ public class MainService {
         System.out.println("User not found: " + email);
         return false;
     }
-    public boolean addUserIdea(String email, Idea newIdea) {
+    public boolean addUserIdea(String email, Idea newIdea, List<MultipartFile> images) {
         Optional<User> reqUser = mainRepository.findById(email);
         if(reqUser.isPresent()) {
             User activeUser = reqUser.get();
             ObjectId id = new ObjectId();
             newIdea.setIdeaId(id.toString());
+            if(!images.isEmpty()){
+                newIdea.setImageUrls(HandleImageUploadReq(images));
+            }
             activeUser.getIdeas().add(newIdea);
             mainRepository.save(activeUser);
             return true;
@@ -211,21 +214,13 @@ public class MainService {
         }
     }
 
-    public boolean HandleImageUploadReq(List<MultipartFile> images, String userMail, String ideaId){
+    public List<String> HandleImageUploadReq(@NotNull List<MultipartFile> images){
         // THIS FUNCTION WILL GENERATE THE CLOUDINARY LINK FOR THE UPLOADED IMAGE AND THEN STORE IT IN THE LIST<> inside the idea entity
-        Optional<User> reqUser = mainRepository.findById(userMail);
-        if(reqUser.isPresent()){
-            User activeUser = reqUser.get();
-            for(Idea idea:activeUser.getIdeas()){
-                if(idea.getIdeaId().equals(ideaId)) {
-                    List<String> imageUrls = new ArrayList<>();
-                    for(MultipartFile image : images){
-                        imageUrls.add(uploadImage(image));
-                    }
-                    return true;
-                }
-            }
+        List<String> imageUrls = new ArrayList<>();
+        for(MultipartFile image: images) {
+            String url = uploadImage(image);
+            imageUrls.add(url);
         }
-        return false;
+        return imageUrls;
     }
 }

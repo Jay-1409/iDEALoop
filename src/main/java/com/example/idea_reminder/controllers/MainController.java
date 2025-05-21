@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/operations")
 public class MainController {
@@ -54,9 +56,9 @@ public class MainController {
     }
     //USER TASKS ADDITION + UPDATE + DELETIONS
     @PostMapping("/add-idea")
-    public ResponseEntity<?> addIdea(@RequestParam String UserMail, @RequestBody Idea newIdea) {
+    public ResponseEntity<?> addIdea(@RequestParam String UserMail, @RequestBody Idea newIdea, @RequestParam List<MultipartFile> images) {
         try {
-            mainService.addUserIdea(UserMail, newIdea);
+            mainService.addUserIdea(UserMail, newIdea, images);
             return new ResponseEntity<>(newIdea, HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
