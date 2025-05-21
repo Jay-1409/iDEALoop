@@ -4,7 +4,9 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Idea {
     String ideaId;
@@ -12,6 +14,7 @@ public class Idea {
     String ideaText;
     boolean remindMe;
     LocalDate nextRemindDate;
+    List<String> imageUrls = new ArrayList<>();
     int gap;
     public String getIdeaId() {
         return ideaId;
@@ -59,5 +62,13 @@ public class Idea {
 
     public void setGap(int gap) {
         this.gap = gap;
+    }
+
+    public List<String> getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }
