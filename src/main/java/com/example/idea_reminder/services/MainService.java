@@ -210,7 +210,22 @@ public class MainService {
             return e.getMessage();
         }
     }
-    public String HandleImageUploadReq(List<MultipartFile> images){
+
+    public boolean HandleImageUploadReq(List<MultipartFile> images, String userMail, String ideaId){
         // THIS FUNCTION WILL GENERATE THE CLOUDINARY LINK FOR THE UPLOADED IMAGE AND THEN STORE IT IN THE LIST<> inside the idea entity
+        Optional<User> reqUser = mainRepository.findById(userMail);
+        if(reqUser.isPresent()){
+            User activeUser = reqUser.get();
+            for(Idea idea:activeUser.getIdeas()){
+                if(idea.getIdeaId().equals(ideaId)) {
+                    List<String> imageUrls = new ArrayList<>();
+                    for(MultipartFile image : images){
+                        imageUrls.add(uploadImage(image));
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
