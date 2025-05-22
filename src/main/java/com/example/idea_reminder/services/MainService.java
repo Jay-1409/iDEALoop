@@ -142,6 +142,7 @@ public class MainService {
     }
     @Scheduled(cron = "0 0 6 * * *", zone = "Asia/Kolkata")
     public void remindEveryone() {
+        // this part of code requires to run as a job instead of as a service.
         List<User> allUsers = mainRepository.findAll();
         for(User x : allUsers) {
             List<Idea> allIdeas = x.getIdeas();

@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>idea-reminder</artifactId>
+	<artifactId>iDeaLoop</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>idea-reminder</name>
 	<description>idea reminder backend </description>
