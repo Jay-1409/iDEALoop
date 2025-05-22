@@ -11,7 +11,7 @@ public class User {
     String userEmail;
     String userPass;
     List<Idea> ideas = new ArrayList<>();
-
+    List<Event> events = new ArrayList<>();
     public String getUserEmail() {
         return userEmail;
     }
@@ -34,5 +34,13 @@ public class User {
 
     public void setIdeas(List<Idea> ideas) {
         this.ideas = ideas;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
     }
 }

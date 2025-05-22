@@ -3,7 +3,7 @@ package com.example.idea_reminder.entities;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class event {
+public class Event {
     private String id;
     private String title;
     private String description;
