@@ -55,6 +55,14 @@ public class MainController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+    @GetMapping("/login/{UserMail}/{UserPass}")
+    public ResponseEntity<?> userLogin(@PathVariable("UserMail") String userMail, @PathVariable("UserPass") String userPass) {
+        try {
+            return new ResponseEntity<>(mainService.validateUser(userMail, userPass), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
     //USER TASKS ADDITION + UPDATE + DELETIONS
     @PostMapping(value = "/add-idea", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addIdea(

@@ -1,28 +1,25 @@
 package com.example.idea_reminder.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.idea_reminder.entities.Idea;
 import com.example.idea_reminder.entities.User;
 import com.example.idea_reminder.repository.MainRepository;
-
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.AccessType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import com.cloudinary.*;
-import com.cloudinary.utils.ObjectUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class MainService {
