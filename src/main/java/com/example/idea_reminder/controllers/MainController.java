@@ -112,4 +112,12 @@ public class MainController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+    @GetMapping("/call-gemini")
+    public ResponseEntity<?> getAiIdeaSuggestions(@RequestParam String ideaTitle, @RequestParam String ideaDescription){
+        try {
+            return new ResponseEntity<>(mainService.sendPromptToGemini(ideaTitle, ideaDescription), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

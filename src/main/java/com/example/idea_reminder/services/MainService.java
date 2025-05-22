@@ -2,16 +2,23 @@ package com.example.idea_reminder.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.example.idea_reminder.entities.GeminiReq;
 import com.example.idea_reminder.entities.Idea;
 import com.example.idea_reminder.entities.User;
 import com.example.idea_reminder.repository.MainRepository;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -226,4 +233,27 @@ public class MainService {
         }
         return imageUrls;
     }
+
+    // GEMINI INTEGRATION
+    @Value("${gemini.api.key}")
+    private String apiKey;
+    private final String GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=";
+    public String sendPromptToGemini(String ideaTitle, String ideaDescription) {
+        GeminiReq.Content.Part part = new GeminiReq.Content.Part();
+        part.setText("You are going to be given the idea Title and idea Description, your task would be to give 3 suggestion's on the ideas, each suggestion must not exceed 20 words." + "Idea title: " + ideaTitle + " Idea description: " + ideaDescription);
+        GeminiReq.Content content = new GeminiReq.Content();
+        content.setRole("user");
+        content.setParts(List.of(part));
+        GeminiReq request = new GeminiReq();
+        request.setContents(List.of(content));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<GeminiReq> entity = new HttpEntity<>(request, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        System.out.println(GEMINI_URL + apiKey);
+        ResponseEntity<String> response = restTemplate.postForEntity(GEMINI_URL + apiKey, entity, String.class);
+        return response.getBody();
+    }
+
+
 }
