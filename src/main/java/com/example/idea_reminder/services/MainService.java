@@ -217,7 +217,6 @@ public class MainService {
             return e.getMessage();
         }
     }
-
     public List<String> HandleImageUploadReq(@NotNull List<MultipartFile> images){
         // THIS FUNCTION WILL GENERATE THE CLOUDINARY LINK FOR THE UPLOADED IMAGE AND THEN STORE IT IN THE LIST<> inside the idea entity
         List<String> imageUrls = new ArrayList<>();
